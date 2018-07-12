@@ -30,7 +30,9 @@ var squares = []
 
 var lastFrameTime = Date.now()
 
-var globalDirection = [0, 0.1]
+var globalDirection = [0, 0]
+var directionSource = 'random'
+var maxDirectionSpeed = 0.2
 
 function setup() {
     width = Math.ceil(window.innerWidth / squareSize)
@@ -88,6 +90,19 @@ function drawAndUpdate() {
     lastFrameTime = frameTime + lastFrameTime
 
     ctx.clearRect(0, 0, canvas.width, canvas.height)
+
+    if (directionSource === 'random') {
+        globalDirection[0] += (Math.random() - 0.5) * 0.01
+        globalDirection[1] += (Math.random() - 0.5) * 0.01
+    }
+    globalDirection[0] = Math.max(
+        -maxDirectionSpeed,
+        Math.min(maxDirectionSpeed, globalDirection[0])
+    )
+    globalDirection[1] = Math.max(
+        -maxDirectionSpeed,
+        Math.min(maxDirectionSpeed, globalDirection[1])
+    )
 
     var newSquares = []
 
@@ -203,13 +218,13 @@ function drawAndUpdate() {
         }
     }
     /*
-  ctx.globalAlpha = 1
-  for (var i = 0; i < points.length; i++) {
-    ctx.fillStyle = 'red'
-    
-    ctx.fillRect(points[i][0] * squareSize, points[i][1] * squareSize, 3, 3)
-  }
-  */
+    ctx.globalAlpha = 1
+    for (var i = 0; i < points.length; i++) {
+        ctx.fillStyle = 'red'
+        
+        ctx.fillRect(points[i][0] * squareSize, points[i][1] * squareSize, 3, 3)
+    }
+    */
 
     requestAnimationFrame(drawAndUpdate)
 }
@@ -231,9 +246,26 @@ document.body.onclick = function() {
 
 requestAnimationFrame(drawAndUpdate)
 
-window.ondevicemotion = function(event) {
-    var scale = 0.02
+if (window.DeviceMotionEvent) {
+    /*
+    window.addEventListener('devicemotion', function(event) {
+        if (event.accelerationIncludingGravity) {
+            directionSource = 'motion'
 
-    globalDirection[0] = event.accelerationIncludingGravity.x * -scale
-    globalDirection[1] = event.accelerationIncludingGravity.y * scale
+            globalDirection[0] = event.accelerationIncludingGravity.x * 0.02
+            globalDirection[0] = event.accelerationIncludingGravity.x * 0.02
+        }
+    })
+    */
+}
+if (window.DeviceOrientationEvent) {
+    window.addEventListener('deviceorientation', function(event) {
+        directionSource === 'random' ? (directionSource = 'orient') : false
+        if (directionSource !== 'orient') {
+            return false
+        }
+
+        globalDirection[0] = Math.min(1, Math.max(-1, event.gamma / 90)) * 0.2
+        globalDirection[1] = Math.min(1, Math.max(-1, event.beta / 90)) * 0.2
+    })
 }
