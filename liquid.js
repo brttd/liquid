@@ -249,8 +249,12 @@ requestAnimationFrame(drawAndUpdate)
 
 var yScale = -1
 
-if (!window.chrome) {
+if (!window.chrome && !navigator.userAgent.toLowerCase().includes('chrome')) {
     yScale = 1
+
+    showMessage(
+        "Orientation may be incorrect, as this hasn't been tested on browsers other than Chrome"
+    )
 }
 
 if (window.DeviceMotionEvent) {
