@@ -14,7 +14,31 @@ body {
     background: black;
     position: absolute;
 }
+#message {
+    position: absolute;
+    top: 1em;
+    left: 50%;
+
+    transform: translate(-50%, 0);
+
+    z-index: 2;
+
+    width: 28em;
+    max-width: 90vw;
+
+    padding: 0.5em;
+
+    white-space: pre-wrap;
+
+    color: white;
+    font-family: sans-serif;
+    font-size: 1.25em;
+    text-align: center;
+
+
+    background: rgba(0, 0, 0, 0.5);
+}
 </style>
 </head>
-<body><noscript>This requires a modern, JavaScript enabled browser. Please <a href="https://www.enable-javascript.com/" target="_blank">enable JavaScript</a> in your web browser.</noscript><canvas id="canvas"></canvas><script src="liquid.js"></script></body>
+<body><div id="message" style="display: none;"></div><noscript>This requires a modern, JavaScript enabled browser. Please <a href="https://www.enable-javascript.com/" target="_blank">enable JavaScript</a> in your web browser.</noscript><canvas id="canvas"></canvas><script src="liquid.js"></script></body>
 </html>
