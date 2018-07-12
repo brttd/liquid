@@ -247,10 +247,10 @@ document.body.onclick = function() {
 
 requestAnimationFrame(drawAndUpdate)
 
-var yScale = -1
+var xScale = -1
 
 if (!window.chrome && !navigator.userAgent.toLowerCase().includes('chrome')) {
-    yScale = 1
+    xScale = 1
 
     showMessage(
         "Orientation may be incorrect, as this hasn't been tested on browsers other than Chrome"
@@ -265,9 +265,9 @@ if (window.DeviceMotionEvent) {
         ) {
             directionSource = 'motion'
 
-            globalDirection[0] = event.accelerationIncludingGravity.x * 0.02
-            globalDirection[1] =
-                event.accelerationIncludingGravity.y * 0.02 * yScale
+            globalDirection[0] =
+                event.accelerationIncludingGravity.x * 0.02 * xScale
+            globalDirection[1] = event.accelerationIncludingGravity.y * 0.02
         }
     })
 }
