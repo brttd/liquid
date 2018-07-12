@@ -37,6 +37,16 @@ var globalDirection = [0, 0]
 var directionSource = 'random'
 var maxDirectionSpeed = 0.08
 
+function showMessage(text) {
+    messageDiv.textContent = text
+
+    messageDiv.style.display = ''
+
+    setTimeout(function() {
+        messageDiv.style.display = 'none'
+    }, 1000 * 6)
+}
+
 function setup() {
     width = Math.ceil(window.innerWidth / squareSize)
     height = Math.ceil(window.innerHeight / squareSize)
@@ -212,13 +222,7 @@ setup()
 window.onresize = setup
 
 window.addEventListener('orientationchange', function() {
-    messageDiv.textContent = 'Please disable screen rotation!'
-
-    messageDiv.style.display = ''
-
-    setTimeout(function() {
-        messageDiv.style.display = 'none'
-    }, 1000 * 10)
+    showMessage('Please disable screen rotation!')
 })
 
 document.body.onclick = function() {
@@ -243,6 +247,12 @@ document.body.onclick = function() {
 
 requestAnimationFrame(drawAndUpdate)
 
+var yScale = -1
+
+if (!window.chrome) {
+    yScale = 1
+}
+
 if (window.DeviceMotionEvent) {
     window.addEventListener('devicemotion', function(event) {
         if (
@@ -252,7 +262,8 @@ if (window.DeviceMotionEvent) {
             directionSource = 'motion'
 
             globalDirection[0] = event.accelerationIncludingGravity.x * 0.02
-            globalDirection[1] = event.accelerationIncludingGravity.y * 0.02
+            globalDirection[1] =
+                event.accelerationIncludingGravity.y * 0.02 * yScale
         }
     })
 }
@@ -270,13 +281,8 @@ if (window.DeviceOrientationEvent) {
 
 setTimeout(function() {
     if (directionSource === 'random') {
-        messageDiv.textContent =
+        showMessage(
             'Unable to get orientation or motion information from device!\nThe gravity direction will be random.'
-
-        messageDiv.style.display = ''
-
-        setTimeout(function() {
-            messageDiv.style.display = 'none'
-        }, 1000 * 6)
+        )
     }
 }, 1000 * 1.5)
